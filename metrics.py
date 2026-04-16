@@ -12,10 +12,10 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def validate_host(value):
-    pat = re.compile(r"^(([0-9a-zA-Z_.-]|[0-9a-fA-F:]{2,39})+)")
+def validate_host(value: str) -> str:
+    pat = re.compile(r"^(([0-9a-zA-Z_.-]|[0-9a-fA-F:]{2,39})+)$")
     if not pat.match(value):
-        raise argparse.ArgumentTypeError("invalid value")
+        raise argparse.ArgumentTypeError("invalid value, must be hostname or IP")
     return value
 
 parser = argparse.ArgumentParser(description='ZFS exporter for Prometheus', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
