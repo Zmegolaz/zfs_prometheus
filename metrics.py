@@ -483,7 +483,7 @@ def collect_metrics() -> str:
 class RequestHandler(BaseHTTPRequestHandler):
     def accept_request(self) -> None:
         self.send_response(200)
-        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Type", "text/plain")
         self.end_headers()
 
     def reject_request(self) -> None:
