@@ -22,10 +22,12 @@ parser = argparse.ArgumentParser(description='ZFS exporter for Prometheus', form
 parser.add_argument('-b', '--bind', type=validate_host, help='Bind to ip/host', default="0.0.0.0")
 parser.add_argument('-p', '--port', type=int, help='Listening port', default=9901)
 parser.add_argument('-a', '--arcstats', type=str, help='Path for ZFS arcstats', default="/proc/spl/kstat/zfs/arcstats")
+parser.add_argument('-k', '--kstat', type=str, help='Path for ZFS pool kstat directory', default="/proc/spl/kstat/zfs")
 
 args = parser.parse_args()
 
 ARCSTATS_PATH = Path(args.arcstats)
+ZFS_KSTAT_PATH = Path(args.kstat)
 
 ZFS_DATASET_METRICS: dict[str, tuple[str, str, str]] = {
     "used":                 ("zfs_used_bytes",                   "gauge",   "Bytes used by dataset and all descendants"),
@@ -44,6 +46,17 @@ ZFS_DATASET_METRICS: dict[str, tuple[str, str, str]] = {
     "reservation":          ("zfs_reservation_bytes",            "gauge",   "Dataset reservation in bytes (0 = none)"),
     "refquota":             ("zfs_refquota_bytes",               "gauge",   "Referenced quota in bytes (0 = none)"),
     "refreservation":       ("zfs_refreservation_bytes",         "gauge",   "Referenced reservation in bytes (0 = none)"),
+}
+
+POOL_IOSTATS_METRICS: dict[str, tuple[str, str, str]] = {
+    "arc_read_count":     ("zfs_pool_arc_reads_total",         "counter", "Total ARC-level read operations since pool import"),
+    "arc_read_bytes":     ("zfs_pool_arc_read_bytes_total",    "counter", "Total ARC-level bytes read since pool import"),
+    "arc_write_count":    ("zfs_pool_arc_writes_total",        "counter", "Total ARC-level write operations since pool import"),
+    "arc_write_bytes":    ("zfs_pool_arc_write_bytes_total",   "counter", "Total ARC-level bytes written since pool import"),
+    "direct_read_count":  ("zfs_pool_direct_reads_total",      "counter", "Total direct (O_DIRECT) read operations since pool import"),
+    "direct_read_bytes":  ("zfs_pool_direct_read_bytes_total", "counter", "Total direct (O_DIRECT) bytes read since pool import"),
+    "direct_write_count": ("zfs_pool_direct_writes_total",     "counter", "Total direct (O_DIRECT) write operations since pool import"),
+    "direct_write_bytes": ("zfs_pool_direct_write_bytes_total","counter", "Total direct (O_DIRECT) bytes written since pool import"),
 }
 
 ARC_METRICS: dict[str, tuple[str, str, str]] = {
@@ -341,6 +354,11 @@ def collect_vdev_metrics(lines: list[str]) -> None:
         logger.warning("zpool status failed: %s", e)
         return
 
+    # Pool I/O stats headers
+    for stat_key, (metric_name, metric_type, description) in POOL_IOSTATS_METRICS.items():
+        lines.append(f"# HELP {metric_name} {description}")
+        lines.append(f"# TYPE {metric_name} {metric_type}")
+
     all_vdevs: list[dict[str, Any]] = []
     for pool_name, pool_info in data.get("pools", {}).items():
         pool_state = pool_info.get("state", "unknown").lower()
@@ -349,6 +367,9 @@ def collect_vdev_metrics(lines: list[str]) -> None:
         lines.append(
             f'zfs_pool_state{{pool="{pool_name}"}} {pool_state_int}'
         )
+
+        # Per-pool I/O stats
+        lines.extend(collect_pool_iostats(pool_name))
 
         # Walk trees (the top-level "vdevs" dict contains the root vdev)
         for root_vdev in pool_info.get("vdevs", {}).values():
@@ -427,6 +448,32 @@ def collect_vdev_metrics(lines: list[str]) -> None:
             )
 
 
+def collect_pool_iostats(pool_name: str) -> list[str]:
+    # Read per-pool I/O counters from /proc/spl/kstat/zfs/<pool>/iostats.
+    iostats_path = ZFS_KSTAT_PATH / pool_name / "iostats"
+    stats: dict[str, int] = {}
+    try:
+        for line in iostats_path.read_text().splitlines():
+            parts = line.split()
+            if len(parts) == 3 and parts[1].isdigit():
+                try:
+                    stats[parts[0]] = int(parts[2])
+                except ValueError:
+                    pass
+    except OSError as e:
+        logger.warning("Could not read pool iostats for %s: %s", pool_name, e)
+
+    if not stats:
+        return []
+
+    lines: list[str] = []
+    for stat_key, (metric_name, metric_type, description) in POOL_IOSTATS_METRICS.items():
+        if stat_key not in stats:
+            continue
+        lines.append(f'{metric_name}{{pool="{pool_name}"}} {stats[stat_key]}')
+    return lines
+
+
 def collect_metrics() -> str:
     lines: list[str] = []
 
@@ -497,7 +544,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             return
         if self.path == "/healthz":
             self.accept_request()
-            self.wfile.write("ok")
+            self.wfile.write(b"ok")
             return
 
         self.reject_request()

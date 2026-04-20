@@ -5,8 +5,8 @@
     "name": "zfs",
     "namespace": "default",
     "uid": "t7DoQqbew6iG1Hd3Bsv7yByKouYXECzx5JxsQtWcDw8X",
-    "resourceVersion": "1776416181871993",
-    "generation": 6,
+    "resourceVersion": "1776701896954004",
+    "generation": 10,
     "creationTimestamp": "2026-04-16T10:57:11Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "8"
@@ -14,10 +14,10 @@
     "annotations": {
       "grafana.app/createdBy": "user:ef9orw15oadq8c",
       "grafana.app/folder": "",
-      "grafana.app/message": "Add written since last snapshot",
+      "grafana.app/message": "Visual stuff for positive+negative and BPS graphs",
       "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f)",
       "grafana.app/updatedBy": "user:ef9orw15oadq8c",
-      "grafana.app/updatedTimestamp": "2026-04-17T08:56:21Z"
+      "grafana.app/updatedTimestamp": "2026-04-20T16:18:16Z"
     }
   },
   "spec": {
@@ -61,24 +61,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
-                      "spec": {
-                        "expr": "zfs_arc_dnode_size{instance=\"$instance\"}",
-                        "legendFormat": "Dnodes"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "",
-                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_dbuf_size{instance=\"$instance\"}",
                         "legendFormat": "DBufs"
@@ -93,8 +80,30 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "expr": "zfs_arc_dnode_size{instance=\"$instance\"}",
+                        "legendFormat": "Dnodes"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_hdr_size{instance=\"$instance\"}",
                         "legendFormat": "Headers"
@@ -159,8 +168,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -178,7 +187,7 @@
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
-                      "mode": "none"
+                      "mode": "normal"
                     },
                     "thresholdsStyle": {
                       "mode": "off"
@@ -289,8 +298,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -298,6 +307,9 @@
                     },
                     "insertNulls": false,
                     "lineInterpolation": "linear",
+                    "lineStyle": {
+                      "fill": "solid"
+                    },
                     "lineWidth": 1,
                     "pointSize": 5,
                     "scaleDistribution": {
@@ -308,7 +320,7 @@
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
-                      "mode": "none"
+                      "mode": "percent"
                     },
                     "thresholdsStyle": {
                       "mode": "off"
@@ -429,8 +441,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -455,7 +467,20 @@
                     }
                   }
                 },
-                "overrides": []
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byFrameRefID",
+                      "options": "B"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
               }
             }
           }
@@ -546,8 +571,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -665,8 +690,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -782,8 +807,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -992,8 +1017,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "sum(rate(zfs_arc_hits{instance=\"$instance\"}[$__rate_interval])) / (sum(rate(zfs_arc_hits{instance=\"$instance\"}[$__rate_interval])) + sum(rate(zfs_arc_misses{instance=\"$instance\"}[$__rate_interval])))",
@@ -1061,8 +1089,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1278,8 +1306,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1743,8 +1771,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1862,8 +1890,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -1910,8 +1938,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "sum(rate(zfs_arc_l2_hits{instance=\"$instance\"}[$__rate_interval])) / (sum(rate(zfs_arc_l2_hits{instance=\"$instance\"}[$__rate_interval])) + sum(rate(zfs_arc_l2_misses{instance=\"$instance\"}[$__rate_interval])))",
@@ -1974,8 +2005,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2022,11 +2053,15 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_arc_l2_mru_asize{instance=\"$instance\"}",
+                        "instant": false,
                         "legendFormat": "Most Recently Used (MRU)",
                         "range": true
                       }
@@ -2040,11 +2075,15 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_arc_l2_mfu_asize{instance=\"$instance\"}",
+                        "instant": false,
                         "legendFormat": "Most Frequently Used (MFU)",
                         "range": true
                       }
@@ -2070,7 +2109,7 @@
                         "range": true
                       }
                     },
-                    "refId": "D",
+                    "refId": "C",
                     "hidden": false
                   }
                 }
@@ -2129,8 +2168,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2148,7 +2187,7 @@
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
-                      "mode": "none"
+                      "mode": "normal"
                     },
                     "thresholdsStyle": {
                       "mode": "off"
@@ -2246,8 +2285,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 10,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2294,8 +2333,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_vdev_slow_ios_total[30m]) > 0",
@@ -2359,8 +2401,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2478,8 +2520,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2510,6 +2552,425 @@
           }
         }
       },
+      "panel-34": {
+        "kind": "Panel",
+        "spec": {
+          "id": 34,
+          "title": "Dataset read/write bytes",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(zfs_pool_arc_read_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "legendFormat": "Read {{pool}}",
+                        "range": true
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(zfs_pool_arc_write_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "legendFormat": "Write {{pool}}",
+                        "range": true
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.0.1",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "binBps",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byFrameRefID",
+                      "options": "B"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-35": {
+        "kind": "Panel",
+        "spec": {
+          "id": 35,
+          "title": "Dataset reads/writes",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(zfs_pool_arc_reads_total{instance=\"$instance\"}[$__rate_interval])",
+                        "legendFormat": "Reads {{pool}}",
+                        "range": true
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "rate(zfs_pool_arc_writes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "legendFormat": "Writes {{pool}}",
+                        "range": true
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.0.1",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "sishort",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byFrameRefID",
+                      "options": "B"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-36": {
+        "kind": "Panel",
+        "spec": {
+          "id": 36,
+          "title": "Dataset read/write bytes",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "rate(zfs_pool_arc_read_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{pool}} read",
+                        "range": true
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "rate(zfs_pool_arc_write_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "instant": false,
+                        "legendFormat": "{{pool}} write",
+                        "range": true
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "bargauge",
+            "version": "13.0.1",
+            "spec": {
+              "options": {
+                "displayMode": "gradient",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "left",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "valueMode": "color"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "binBps",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
       "panel-5": {
         "kind": "Panel",
         "spec": {
@@ -2526,8 +2987,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
@@ -2590,8 +3054,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2638,8 +3102,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_size{instance=\"$instance\"}",
                         "legendFormat": "Current Size"
@@ -2654,8 +3121,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_c{instance=\"$instance\"}",
                         "legendFormat": "Target (C)"
@@ -2670,8 +3140,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_c_max{instance=\"$instance\"}",
                         "legendFormat": "Max (C_Max)"
@@ -2736,8 +3209,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2784,24 +3257,11 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
-                      "spec": {
-                        "expr": "zfs_arc_mru_size{instance=\"$instance\"}",
-                        "legendFormat": "Most Recently Used (MRU)"
-                      }
-                    },
-                    "refId": "A",
-                    "hidden": false
-                  }
-                },
-                {
-                  "kind": "PanelQuery",
-                  "spec": {
-                    "query": {
-                      "kind": "DataQuery",
-                      "group": "",
-                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_mfu_size{instance=\"$instance\"}",
                         "legendFormat": "Most Frequently Used (MFU)"
@@ -2816,14 +3276,36 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
                         "expr": "zfs_arc_anon_size{instance=\"$instance\"}",
                         "legendFormat": "Anonymous"
                       }
                     },
                     "refId": "C",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
+                      "spec": {
+                        "expr": "zfs_arc_mru_size{instance=\"$instance\"}",
+                        "legendFormat": "Most Recently Used (MRU)"
+                      }
+                    },
+                    "refId": "A",
                     "hidden": false
                   }
                 }
@@ -2882,8 +3364,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -2930,14 +3412,17 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
-                        "expr": "rate(zfs_arc_mru_ghost_hits{instance=\"$instance\"}[5m])",
-                        "legendFormat": "MRU Ghost Hits"
+                        "expr": "rate(zfs_arc_mfu_ghost_hits{instance=\"$instance\"}[5m])",
+                        "legendFormat": "MFU Ghost Hits"
                       }
                     },
-                    "refId": "A",
+                    "refId": "B",
                     "hidden": false
                   }
                 },
@@ -2946,14 +3431,17 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
+                      "datasource": {
+                        "name": "df9oscs0fo5c0e"
+                      },
                       "spec": {
-                        "expr": "rate(zfs_arc_mfu_ghost_hits{instance=\"$instance\"}[5m])",
-                        "legendFormat": "MFU Ghost Hits"
+                        "expr": "rate(zfs_arc_mru_ghost_hits{instance=\"$instance\"}[5m])",
+                        "legendFormat": "MRU Ghost Hits"
                       }
                     },
-                    "refId": "B",
+                    "refId": "A",
                     "hidden": false
                   }
                 }
@@ -3011,8 +3499,8 @@
                     "barAlignment": 0,
                     "barWidthFactor": 0.6,
                     "drawStyle": "line",
-                    "fillOpacity": 0,
-                    "gradientMode": "none",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
                     "hideFrom": {
                       "legend": false,
                       "tooltip": false,
@@ -3030,7 +3518,7 @@
                     "spanNulls": false,
                     "stacking": {
                       "group": "A",
-                      "mode": "none"
+                      "mode": "normal"
                     },
                     "thresholdsStyle": {
                       "mode": "off"
@@ -3119,7 +3607,7 @@
                         "height": 8,
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-5"
+                          "name": "panel-36"
                         }
                       }
                     },
@@ -3128,6 +3616,71 @@
                       "spec": {
                         "x": 12,
                         "y": 0,
+                        "width": 12,
+                        "height": 8,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 8,
+                        "width": 12,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-34"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 8,
+                        "width": 12,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-20"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 15,
+                        "width": 12,
+                        "height": 7,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-35"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 15,
+                        "width": 12,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-19"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 18,
                         "width": 12,
                         "height": 4,
                         "element": {
@@ -3139,23 +3692,10 @@
                     {
                       "kind": "GridLayoutItem",
                       "spec": {
-                        "x": 12,
-                        "y": 4,
-                        "width": 12,
-                        "height": 4,
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-19"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
                         "x": 0,
-                        "y": 8,
+                        "y": 22,
                         "width": 6,
-                        "height": 6,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-28"
@@ -3166,9 +3706,9 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 6,
-                        "y": 8,
+                        "y": 22,
                         "width": 6,
-                        "height": 6,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-29"
@@ -3178,23 +3718,10 @@
                     {
                       "kind": "GridLayoutItem",
                       "spec": {
-                        "x": 12,
-                        "y": 8,
-                        "width": 12,
-                        "height": 6,
-                        "element": {
-                          "kind": "ElementReference",
-                          "name": "panel-20"
-                        }
-                      }
-                    },
-                    {
-                      "kind": "GridLayoutItem",
-                      "spec": {
                         "x": 0,
-                        "y": 14,
+                        "y": 29,
                         "width": 6,
-                        "height": 6,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-32"
