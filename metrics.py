@@ -3,6 +3,7 @@
 import json
 import logging
 import subprocess
+import threading
 from pathlib import Path
 from typing import Any
 import argparse
@@ -18,16 +19,26 @@ def validate_host(value: str) -> str:
         raise argparse.ArgumentTypeError("invalid value, must be hostname or IP")
     return value
 
+def scrape_interval_seconds(value: str) -> int:
+    n = int(value)
+    if n < 2:
+        raise argparse.ArgumentTypeError("must be at least 2 seconds")
+    return n
+
 parser = argparse.ArgumentParser(description='ZFS exporter for Prometheus', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('-b', '--bind', type=validate_host, help='Bind to ip/host', default="0.0.0.0")
 parser.add_argument('-p', '--port', type=int, help='Listening port', default=9901)
 parser.add_argument('-a', '--arcstats', type=str, help='Path for ZFS arcstats', default="/proc/spl/kstat/zfs/arcstats")
 parser.add_argument('-k', '--kstat', type=str, help='Path for ZFS pool kstat directory', default="/proc/spl/kstat/zfs")
+parser.add_argument('-i', '--scrape-interval', type=scrape_interval_seconds,
+                     help='Expected Prometheus scrape interval in seconds',
+                     default=15)
 
 args = parser.parse_args()
 
 ARCSTATS_PATH = Path(args.arcstats)
 ZFS_KSTAT_PATH = Path(args.kstat)
+ZFS_CMD_TIMEOUT_SECONDS = args.scrape_interval - 1
 
 ZFS_DATASET_METRICS: dict[str, tuple[str, str, str]] = {
     "used":                 ("zfs_used_bytes",                   "gauge",   "Bytes used by dataset and all descendants"),
@@ -282,11 +293,21 @@ def read_arcstats() -> dict[str, int]:
     return stats
 
 
+# Serializes metric collection so overlapping scrapes can't pile up
+# concurrent "zfs get"/"zpool status" subprocesses.
+_collect_lock = threading.Lock()
+
+
 def run_zfs_get_all() -> dict[str, Any]:
-    result = subprocess.run(
-        ["zfs", "get", "-pj", "all"],
-        capture_output=True, text=True, check=True,
-    )
+    try:
+        result = subprocess.run(
+            ["zfs", "get", "-pj", "all"],
+            capture_output=True, text=True, check=True,
+            timeout=ZFS_CMD_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        logger.error("'zfs get -pj all' timed out after %ds", ZFS_CMD_TIMEOUT_SECONDS)
+        raise
     return json.loads(result.stdout)
 
 
@@ -297,10 +318,15 @@ def run_zpool_status() -> dict[str, Any]:
     #                      flat mode loses hierarchy context we need for the
     #                      "vdev_type" of parents.  Use nested (default) instead
     #                      and recurse ourselves.
-    result = subprocess.run(
-        ["zpool", "status", "-j", "--json-int"],
-        capture_output=True, text=True, check=True,
-    )
+    try:
+        result = subprocess.run(
+            ["zpool", "status", "-j", "--json-int"],
+            capture_output=True, text=True, check=True,
+            timeout=ZFS_CMD_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        logger.error("'zpool status -j --json-int' timed out after %ds", ZFS_CMD_TIMEOUT_SECONDS)
+        raise
     return json.loads(result.stdout)
 
 
@@ -350,7 +376,7 @@ def _iter_vdevs(vdev: dict[str, Any], pool: str) -> list[dict[str, Any]]:
 def collect_vdev_metrics(lines: list[str]) -> None:
     try:
         data = run_zpool_status()
-    except (subprocess.CalledProcessError, KeyError, json.JSONDecodeError) as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, KeyError, json.JSONDecodeError) as e:
         logger.warning("zpool status failed: %s", e)
         return
 
@@ -475,10 +501,19 @@ def collect_pool_iostats(pool_name: str) -> list[str]:
 
 
 def collect_metrics() -> str:
+    with _collect_lock:
+        return _collect_metrics()
+
+
+def _collect_metrics() -> str:
     lines: list[str] = []
 
     # Dataset metrics: one subprocess call
-    raw = run_zfs_get_all()
+    try:
+        raw = run_zfs_get_all()
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, json.JSONDecodeError) as e:
+        logger.warning("zfs get failed: %s", e)
+        raw = {"datasets": {}}
     datasets = {
         name: info
         for name, info in raw["datasets"].items()
