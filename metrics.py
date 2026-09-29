@@ -70,6 +70,29 @@ POOL_IOSTATS_METRICS: dict[str, tuple[str, str, str]] = {
     "direct_write_bytes": ("zfs_pool_direct_write_bytes_total","counter", "Total direct (O_DIRECT) bytes written since pool import"),
 }
 
+# Cumulative physical I/O counters per vdev, read from vdev properties.
+# These count the I/O actually issued to the vdevs, including internal work
+# such as snapshot destroy, scrub, resilver and metadata updates.
+VDEV_IO_METRICS: dict[str, tuple[str, str, str]] = {
+    "read_ops":    ("zfs_vdev_read_ops_total",    "counter", "Physical read operations issued to vdev since pool import"),
+    "write_ops":   ("zfs_vdev_write_ops_total",   "counter", "Physical write operations issued to vdev since pool import"),
+    "read_bytes":  ("zfs_vdev_read_bytes_total",  "counter", "Physical bytes read from vdev since pool import"),
+    "write_bytes": ("zfs_vdev_write_bytes_total", "counter", "Physical bytes written to vdev since pool import"),
+}
+
+# Logical I/O per dataset (filesystem or zvol), read from the objset kstats.
+# These count only I/O requested by users: read/write syscalls, mmap page
+# I/O, zvol block I/O, copy_file_range and zfs rewrite. Bytes are counted as
+# requested, before compression, parity or metadata. Ops are counted per
+# request (for example per write() call), not per block. Nothing internal to
+# ZFS is included. Only mounted filesystems and active zvols have these kstats.
+DATASET_IO_METRICS: dict[str, tuple[str, str, str]] = {
+    "reads":    ("zfs_dataset_reads_total",       "counter", "User read operations on dataset since mount"),
+    "nread":    ("zfs_dataset_read_bytes_total",  "counter", "User bytes read from dataset since mount"),
+    "writes":   ("zfs_dataset_writes_total",      "counter", "User write operations on dataset since mount"),
+    "nwritten": ("zfs_dataset_write_bytes_total", "counter", "User bytes written to dataset since mount"),
+}
+
 ARC_METRICS: dict[str, tuple[str, str, str]] = {
     "hits":                             ("zfs_arc_hits",                             "counter",     "total ARC cache hits"),
     "iohits":                           ("zfs_arc_iohits",                           "counter",     "hits satisfied by in-flight or recently completed I/O"),
@@ -330,6 +353,95 @@ def run_zpool_status() -> dict[str, Any]:
     return json.loads(result.stdout)
 
 
+def run_zpool_get_vdev_io(pool: str) -> dict[str, Any]:
+    # Some vdevs (dRAID distributed spares, cache devices) don't support vdev
+    # properties. zpool then prints errors for those and exits non-zero, but
+    # still outputs JSON for the rest, so the exit code is ignored.
+    props = ",".join(VDEV_IO_METRICS)
+    try:
+        result = subprocess.run(
+            ["zpool", "get", "-j", "--json-int", props, pool, "all-vdevs"],
+            capture_output=True, text=True, check=False,
+            timeout=ZFS_CMD_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        logger.error("'zpool get %s %s all-vdevs' timed out after %ds", props, pool, ZFS_CMD_TIMEOUT_SECONDS)
+        raise
+    return json.loads(result.stdout)
+
+
+def collect_vdev_io_metrics(pools: list[str], lines: list[str]) -> None:
+    samples: dict[str, list[str]] = {name: [] for name, _, _ in VDEV_IO_METRICS.values()}
+    for pool in pools:
+        try:
+            data = run_zpool_get_vdev_io(pool)
+        except (subprocess.TimeoutExpired, json.JSONDecodeError) as e:
+            logger.warning("zpool get vdev I/O stats failed for %s: %s", pool, e)
+            continue
+
+        for vdev in data.get("vdevs", {}).values():
+            vdev_type = vdev.get("vdev_type", "")
+            # The root vdev has no counters of its own, it's always 0.
+            if vdev_type == "root":
+                continue
+            labels = (
+                f'pool="{pool}",vdev="{vdev.get("path", vdev.get("name", ""))}",'
+                f'vdev_type="{vdev_type}",class="{vdev.get("class", "")}"'
+            )
+            props = vdev.get("properties", {})
+            for prop, (metric_name, _, _) in VDEV_IO_METRICS.items():
+                if prop in props:
+                    samples[metric_name].append(f'{metric_name}{{{labels}}} {props[prop]["value"]}')
+
+    for metric_name, metric_type, description in VDEV_IO_METRICS.values():
+        if not samples[metric_name]:
+            continue
+        lines.append(f"# HELP {metric_name} {description}")
+        lines.append(f"# TYPE {metric_name} {metric_type}")
+        lines.extend(samples[metric_name])
+
+
+def collect_dataset_io_metrics(pools: list[str], lines: list[str]) -> None:
+    samples: dict[str, list[str]] = {name: [] for name, _, _ in DATASET_IO_METRICS.values()}
+    for pool in pools:
+        try:
+            kstat_files = sorted((ZFS_KSTAT_PATH / pool).glob("objset-*"))
+        except OSError as e:
+            logger.warning("Could not list objset kstats for %s: %s", pool, e)
+            continue
+
+        for kstat_file in kstat_files:
+            # Datasets can be unmounted between listing and reading.
+            try:
+                content = kstat_file.read_text()
+            except OSError:
+                continue
+            dataset = None
+            values: dict[str, str] = {}
+            for line in content.splitlines():
+                parts = line.split(maxsplit=2)
+                if len(parts) != 3 or not parts[1].isdigit():
+                    continue
+                if parts[0] == "dataset_name":
+                    dataset = parts[2]
+                elif parts[0] in DATASET_IO_METRICS:
+                    values[parts[0]] = parts[2]
+            if dataset is None:
+                continue
+            for stat, (metric_name, _, _) in DATASET_IO_METRICS.items():
+                if stat in values:
+                    samples[metric_name].append(
+                        f'{metric_name}{{dataset="{dataset}",pool="{pool}"}} {values[stat]}'
+                    )
+
+    for metric_name, metric_type, description in DATASET_IO_METRICS.values():
+        if not samples[metric_name]:
+            continue
+        lines.append(f"# HELP {metric_name} {description}")
+        lines.append(f"# TYPE {metric_name} {metric_type}")
+        lines.extend(samples[metric_name])
+
+
 def is_snapshot(name: str) -> bool:
     return "@" in name
 
@@ -407,6 +519,8 @@ def collect_vdev_metrics(lines: list[str]) -> None:
         for root_vdev in pool_info.get("spares", {}).values():
             all_vdevs.extend(_iter_vdevs(root_vdev, pool_name))
 
+    collect_vdev_io_metrics(list(data.get("pools", {})), lines)
+    collect_dataset_io_metrics(list(data.get("pools", {})), lines)
 
     if not all_vdevs:
         return

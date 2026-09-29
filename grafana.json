@@ -3,22 +3,10 @@
   "kind": "Dashboard",
   "metadata": {
     "name": "zfs",
-    "namespace": "default",
-    "uid": "t7DoQqbew6iG1Hd3Bsv7yByKouYXECzx5JxsQtWcDw8X",
-    "resourceVersion": "1776701896954004",
-    "generation": 10,
+    "generation": 19,
     "creationTimestamp": "2026-04-16T10:57:11Z",
-    "labels": {
-      "grafana.app/deprecatedInternalID": "8"
-    },
-    "annotations": {
-      "grafana.app/createdBy": "user:ef9orw15oadq8c",
-      "grafana.app/folder": "",
-      "grafana.app/message": "Visual stuff for positive+negative and BPS graphs",
-      "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f)",
-      "grafana.app/updatedBy": "user:ef9orw15oadq8c",
-      "grafana.app/updatedTimestamp": "2026-04-20T16:18:16Z"
-    }
+    "labels": {},
+    "annotations": {}
   },
   "spec": {
     "annotations": [
@@ -29,10 +17,10 @@
             "kind": "DataQuery",
             "group": "grafana",
             "version": "v0",
-            "datasource": {
-              "name": "-- Grafana --"
-            },
-            "spec": {}
+            "spec": {},
+            "labels": {
+              "grafana.app/export-label": "grafana-1"
+            }
           },
           "enable": true,
           "hide": true,
@@ -63,12 +51,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_dbuf_size{instance=\"$instance\"}",
                         "legendFormat": "DBufs"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -82,12 +71,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_dnode_size{instance=\"$instance\"}",
                         "legendFormat": "Dnodes"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -101,12 +91,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_hdr_size{instance=\"$instance\"}",
                         "legendFormat": "Headers"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "C",
@@ -121,7 +112,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -216,11 +207,15 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
                       "spec": {
                         "expr": "zfs_arc_size{instance=\"$instance\"}",
                         "legendFormat": "ARC Size"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -232,11 +227,15 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
                       "spec": {
                         "expr": "zfs_arc_memory_free_bytes{instance=\"$instance\"}",
                         "legendFormat": "System Free RAM"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -251,7 +250,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -351,14 +350,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_arc_l2_read_bytes{instance=\"$instance\"}[$__rate_interval])",
                         "legendFormat": "Read from L2",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -372,14 +372,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_arc_l2_write_bytes{instance=\"$instance\"}[$__rate_interval])",
                         "legendFormat": "Write to L2",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -394,7 +395,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -504,12 +505,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_l2_asize{instance=\"$instance\"}",
                         "legendFormat": "Allocated L2 Size"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -524,7 +526,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -621,14 +623,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_written_bytes{instance=\"$instance\", dataset=~\"$dataset\"}[$__rate_interval])",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -643,7 +646,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -740,12 +743,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_used_by_snapshots_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}} Snapshots"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -760,7 +764,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -857,14 +861,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum (zfs_logical_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"})",
+                        "expr": "zfs_logical_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"}",
                         "legendFormat": "{{dataset}} Logical",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -879,7 +884,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -924,7 +929,7 @@
         "kind": "Panel",
         "spec": {
           "id": 19,
-          "title": "Total dataset size",
+          "title": "Pool size",
           "description": "",
           "links": [],
           "data": {
@@ -938,14 +943,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"} + zfs_available_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -960,7 +966,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -1019,13 +1025,14 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "sum(rate(zfs_arc_hits{instance=\"$instance\"}[$__rate_interval])) / (sum(rate(zfs_arc_hits{instance=\"$instance\"}[$__rate_interval])) + sum(rate(zfs_arc_misses{instance=\"$instance\"}[$__rate_interval])))",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1040,7 +1047,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -1125,7 +1132,7 @@
         "kind": "Panel",
         "spec": {
           "id": 20,
-          "title": "Dataset usage",
+          "title": "Pool usage",
           "description": "",
           "links": [],
           "data": {
@@ -1139,14 +1146,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"} / (zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"} + zfs_available_bytes{instance=\"$instance\", dataset=~\"$dataset\"})",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -1161,7 +1169,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "gauge",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "barShape": "flat",
@@ -1239,12 +1247,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_l2_hdr_size{instance=\"$instance\"}",
                         "legendFormat": "L2 Header RAM Overhead"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -1259,7 +1268,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -1356,14 +1365,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum (zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"})",
+                        "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"}",
                         "legendFormat": "{{dataset}} Physical",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -1378,7 +1388,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -1437,14 +1447,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "(sum (zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"})) / (sum (zfs_logical_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"}))",
+                        "expr": "(zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"}) / (zfs_logical_used_bytes{instance=\"$instance\", dataset=~\"$dataset\", dataset!~\".*/.*\"})",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1459,7 +1470,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -1516,13 +1527,17 @@
                   "spec": {
                     "query": {
                       "kind": "DataQuery",
-                      "group": "",
+                      "group": "prometheus",
                       "version": "v0",
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1537,7 +1552,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -1596,14 +1611,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "count(zfs_vdev_state != 0 != 6)",
                         "legendFormat": "__auto",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1618,7 +1634,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -1681,14 +1697,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_vdev_read_errors_total > 0",
                         "legendFormat": "read errors {{vdev}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1702,14 +1719,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_vdev_write_errors_total > 0",
                         "legendFormat": "write errors {{vdev}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -1724,7 +1742,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -1821,14 +1839,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_vdev_checksum_errors_total[$__rate_interval]) > 0",
                         "legendFormat": "{{vdev}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1843,7 +1862,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -1940,13 +1959,14 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "sum(rate(zfs_arc_l2_hits{instance=\"$instance\"}[$__rate_interval])) / (sum(rate(zfs_arc_l2_hits{instance=\"$instance\"}[$__rate_interval])) + sum(rate(zfs_arc_l2_misses{instance=\"$instance\"}[$__rate_interval])))",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -1961,7 +1981,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2055,15 +2075,16 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_arc_l2_mru_asize{instance=\"$instance\"}",
                         "instant": false,
                         "legendFormat": "Most Recently Used (MRU)",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2077,15 +2098,16 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_arc_l2_mfu_asize{instance=\"$instance\"}",
                         "instant": false,
                         "legendFormat": "Most Frequently Used (MFU)",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -2099,14 +2121,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_arc_l2_bufc_metadata_asize{instance=\"$instance\"}",
                         "legendFormat": "Metadata",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "C",
@@ -2121,7 +2144,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2218,12 +2241,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_compress_ratio{dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}}"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2238,7 +2262,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2335,14 +2359,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "rate(zfs_vdev_slow_ios_total[30m]) > 0",
                         "legendFormat": "{{vdev}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2357,7 +2382,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2451,14 +2476,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_written_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2473,7 +2499,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2570,14 +2596,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(zfs_pool_arc_read_bytes_total{instance=\"$instance\"}[$__rate_interval])",
-                        "legendFormat": "Read {{pool}}",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_read_bytes_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
+                        "legendFormat": "Read {{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2591,14 +2618,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(zfs_pool_arc_write_bytes_total{instance=\"$instance\"}[$__rate_interval])",
-                        "legendFormat": "Write {{pool}}",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_write_bytes_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
+                        "legendFormat": "Write {{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -2613,7 +2641,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2723,14 +2751,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(zfs_pool_arc_reads_total{instance=\"$instance\"}[$__rate_interval])",
-                        "legendFormat": "Reads {{pool}}",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_reads_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
+                        "legendFormat": "Reads {{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2744,14 +2773,15 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(zfs_pool_arc_writes_total{instance=\"$instance\"}[$__rate_interval])",
-                        "legendFormat": "Writes {{pool}}",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_writes_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
+                        "legendFormat": "Writes {{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -2766,7 +2796,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -2787,7 +2817,7 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "sishort",
+                  "unit": "iops",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -2876,16 +2906,17 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "rate(zfs_pool_arc_read_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_read_bytes_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
                         "instant": false,
-                        "legendFormat": "{{pool}} read",
+                        "legendFormat": "{{dataset}} read",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -2899,16 +2930,17 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "rate(zfs_pool_arc_write_bytes_total{instance=\"$instance\"}[$__rate_interval])",
+                        "expr": "sum by (instance, dataset) (rate(zfs_dataset_write_bytes_total{vdev_type!~\"disk|file\",instance=\"$instance\", dataset=~\".*/.*\"}[$__rate_interval]))",
                         "instant": false,
-                        "legendFormat": "{{pool}} write",
+                        "legendFormat": "{{dataset}} write",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -2923,7 +2955,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "bargauge",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "displayMode": "gradient",
@@ -2971,11 +3003,11 @@
           }
         }
       },
-      "panel-5": {
+      "panel-37": {
         "kind": "Panel",
         "spec": {
-          "id": 5,
-          "title": "Total dataset usage",
+          "id": 37,
+          "title": "Total vdev read/write bytes",
           "description": "",
           "links": [],
           "data": {
@@ -2989,14 +3021,325 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (pool, instance) (rate(zfs_vdev_read_bytes_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "legendFormat": "Read {{pool}}",
+                        "range": true
                       },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (pool, instance) (rate(zfs_vdev_write_bytes_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "legendFormat": "Write {{pool}}",
+                        "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "binBps",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byFrameRefID",
+                      "options": "B"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-38": {
+        "kind": "Panel",
+        "spec": {
+          "id": 38,
+          "title": "Total vdev reads/writes",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (pool, instance) (rate(zfs_vdev_read_ops_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "legendFormat": "Read {{pool}}",
+                        "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (pool, instance) (rate(zfs_vdev_write_ops_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "legendFormat": "Write {{pool}}",
+                        "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
+                      }
+                    },
+                    "refId": "B",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "13.2.1",
+            "spec": {
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "iops",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      },
+                      {
+                        "value": 80,
+                        "color": "red"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 30,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byFrameRefID",
+                      "options": "B"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.transform",
+                        "value": "negative-Y"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "id": 5,
+          "title": "Total pool/dataset usage",
+          "description": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "prometheus",
+                      "version": "v0",
                       "spec": {
                         "editorMode": "code",
                         "expr": "zfs_used_bytes{instance=\"$instance\", dataset=~\"$dataset\"}",
                         "legendFormat": "{{dataset}}",
                         "range": true
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -3011,7 +3354,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -3104,12 +3447,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_size{instance=\"$instance\"}",
                         "legendFormat": "Current Size"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -3123,12 +3467,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_c{instance=\"$instance\"}",
                         "legendFormat": "Target (C)"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -3142,12 +3487,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_c_max{instance=\"$instance\"}",
                         "legendFormat": "Max (C_Max)"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "C",
@@ -3162,7 +3508,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -3259,12 +3605,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_mfu_size{instance=\"$instance\"}",
                         "legendFormat": "Most Frequently Used (MFU)"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -3278,12 +3625,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_anon_size{instance=\"$instance\"}",
                         "legendFormat": "Anonymous"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "C",
@@ -3297,12 +3645,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "zfs_arc_mru_size{instance=\"$instance\"}",
                         "legendFormat": "Most Recently Used (MRU)"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -3317,7 +3666,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -3414,12 +3763,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "rate(zfs_arc_mfu_ghost_hits{instance=\"$instance\"}[5m])",
                         "legendFormat": "MFU Ghost Hits"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "B",
@@ -3433,12 +3783,13 @@
                       "kind": "DataQuery",
                       "group": "prometheus",
                       "version": "v0",
-                      "datasource": {
-                        "name": "df9oscs0fo5c0e"
-                      },
                       "spec": {
                         "expr": "rate(zfs_arc_mru_ghost_hits{instance=\"$instance\"}[5m])",
                         "legendFormat": "MRU Ghost Hits"
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "prometheus-1",
+                        "grafana.app/export-datasource-name": "prometheus"
                       }
                     },
                     "refId": "A",
@@ -3453,7 +3804,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.2.1",
             "spec": {
               "options": {
                 "annotations": {
@@ -3604,7 +3955,7 @@
                         "x": 0,
                         "y": 0,
                         "width": 12,
-                        "height": 8,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
                           "name": "panel-36"
@@ -3617,10 +3968,10 @@
                         "x": 12,
                         "y": 0,
                         "width": 12,
-                        "height": 8,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-5"
+                          "name": "panel-20"
                         }
                       }
                     },
@@ -3628,7 +3979,7 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 0,
-                        "y": 8,
+                        "y": 7,
                         "width": 12,
                         "height": 7,
                         "element": {
@@ -3641,12 +3992,12 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 12,
-                        "y": 8,
+                        "y": 7,
                         "width": 12,
                         "height": 7,
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-20"
+                          "name": "panel-37"
                         }
                       }
                     },
@@ -3654,7 +4005,7 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 0,
-                        "y": 15,
+                        "y": 14,
                         "width": 12,
                         "height": 7,
                         "element": {
@@ -3667,12 +4018,25 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 12,
-                        "y": 15,
+                        "y": 14,
                         "width": 12,
-                        "height": 3,
+                        "height": 7,
                         "element": {
                           "kind": "ElementReference",
-                          "name": "panel-19"
+                          "name": "panel-38"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 21,
+                        "width": 12,
+                        "height": 8,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
                         }
                       }
                     },
@@ -3680,7 +4044,7 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 12,
-                        "y": 18,
+                        "y": 21,
                         "width": 12,
                         "height": 4,
                         "element": {
@@ -3692,8 +4056,21 @@
                     {
                       "kind": "GridLayoutItem",
                       "spec": {
+                        "x": 12,
+                        "y": 25,
+                        "width": 12,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-19"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
                         "x": 0,
-                        "y": 22,
+                        "y": 29,
                         "width": 6,
                         "height": 7,
                         "element": {
@@ -3706,7 +4083,7 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 6,
-                        "y": 22,
+                        "y": 29,
                         "width": 6,
                         "height": 7,
                         "element": {
@@ -3719,7 +4096,7 @@
                       "kind": "GridLayoutItem",
                       "spec": {
                         "x": 0,
-                        "y": 29,
+                        "y": 36,
                         "width": 6,
                         "height": 7,
                         "element": {
@@ -4017,8 +4394,8 @@
         "spec": {
           "name": "instance",
           "current": {
-            "text": "127.0.0.1:9901",
-            "value": "127.0.0.1:9901"
+            "text": "",
+            "value": ""
           },
           "hide": "dontHide",
           "refresh": "onDashboardLoad",
@@ -4045,10 +4422,8 @@
         "spec": {
           "name": "dataset",
           "current": {
-            "text": "All",
-            "value": [
-              "$__all"
-            ]
+            "text": "",
+            "value": ""
           },
           "hide": "dontHide",
           "refresh": "onDashboardLoad",
