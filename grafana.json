@@ -3,7 +3,7 @@
   "kind": "Dashboard",
   "metadata": {
     "name": "zfs",
-    "generation": 19,
+    "generation": 20,
     "creationTimestamp": "2026-04-16T10:57:11Z",
     "labels": {},
     "annotations": {}
@@ -3007,7 +3007,7 @@
         "kind": "Panel",
         "spec": {
           "id": 37,
-          "title": "Total vdev read/write bytes",
+          "title": "Total disk read/write bytes",
           "description": "",
           "links": [],
           "data": {
@@ -3023,7 +3023,7 @@
                       "version": "v0",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum by (pool, instance) (rate(zfs_vdev_read_bytes_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "expr": "sum by (pool) (rate(zfs_vdev_read_bytes_total{vdev_type=~\"disk|file\"}[$__rate_interval]))",
                         "legendFormat": "Read {{pool}}",
                         "range": true
                       },
@@ -3045,7 +3045,7 @@
                       "version": "v0",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum by (pool, instance) (rate(zfs_vdev_write_bytes_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "expr": "sum by (pool) (rate(zfs_vdev_write_bytes_total{vdev_type=~\"disk|file\"}[$__rate_interval]))",
                         "legendFormat": "Write {{pool}}",
                         "range": true
                       },
@@ -3162,7 +3162,7 @@
         "kind": "Panel",
         "spec": {
           "id": 38,
-          "title": "Total vdev reads/writes",
+          "title": "Total disk reads/writes",
           "description": "",
           "links": [],
           "data": {
@@ -3178,7 +3178,7 @@
                       "version": "v0",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum by (pool, instance) (rate(zfs_vdev_read_ops_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "expr": "sum by (pool) (rate(zfs_vdev_read_ops_total{vdev_type=~\"disk|file\"}[$__rate_interval]))",
                         "legendFormat": "Read {{pool}}",
                         "range": true
                       },
@@ -3200,7 +3200,7 @@
                       "version": "v0",
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum by (pool, instance) (rate(zfs_vdev_write_ops_total{vdev_type!~\"disk|file\"}[$__rate_interval]))",
+                        "expr": "sum by (pool) (rate(zfs_vdev_write_ops_total{vdev_type=~\"disk|file\"}[$__rate_interval]))",
                         "legendFormat": "Write {{pool}}",
                         "range": true
                       },
